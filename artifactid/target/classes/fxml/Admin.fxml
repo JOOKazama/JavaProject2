@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="443.0" prefWidth="555.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AdminController">
+<AnchorPane prefHeight="533.0" prefWidth="563.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AdminController">
    <children>
       <TableView fx:id="tableview" layoutX="18.0" layoutY="69.0" prefHeight="287.0" prefWidth="521.0">
         <columns>
@@ -42,7 +41,7 @@
             <Font name="System Bold Italic" size="14.0" />
          </font>
          <textFill>
-            <LinearGradient endX="1.0" endY="1.0">
+            <LinearGradient>
                <stops>
                   <Stop>
                      <color>
@@ -63,7 +62,7 @@
             <Font name="System Bold Italic" size="14.0" />
          </font>
          <textFill>
-            <LinearGradient endX="1.0" endY="1.0">
+            <LinearGradient>
                <stops>
                   <Stop>
                      <color>
@@ -93,12 +92,40 @@
          </effect>
       </Button>
       <Button fx:id="create" layoutX="286.0" layoutY="404.0" mnemonicParsing="false" onAction="#action3" prefHeight="25.0" prefWidth="253.0" text="Create new employee">
+      <font>
+         <Font name="System Bold Italic" size="12.0" />
+      </font>
+      <effect>
+         <DropShadow />
+      </effect>
+   </Button>
+      <Button fx:id="day" layoutX="286.0" layoutY="441.0" mnemonicParsing="false" onAction="#action4" prefHeight="25.0" prefWidth="253.0" text="Show for today">
          <font>
             <Font name="System Bold Italic" size="12.0" />
          </font>
          <effect>
             <DropShadow />
          </effect>
+      </Button>
+      <Button fx:id="month" layoutX="22.0" layoutY="441.0" mnemonicParsing="false" onAction="#action5" prefHeight="25.0" prefWidth="253.0" text="Show for the month">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Button>
+      <Button fx:id="seven" layoutX="22.0" layoutY="478.0" mnemonicParsing="false" onAction="#action6" prefHeight="25.0" prefWidth="253.0" text="Show for the last 7 days">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Button>
+      <Button fx:id="hardware" layoutX="286.0" layoutY="478.0" mnemonicParsing="false" onAction="#action7" prefHeight="25.0" prefWidth="253.0" text="Add hardware ID">
+         <font> <Font name="System Bold Italic" size="12.0" /> </font>
+         <effect> <DropShadow /> </effect>
       </Button>
    </children>
 </AnchorPane>

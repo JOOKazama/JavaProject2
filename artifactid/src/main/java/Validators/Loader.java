@@ -1,14 +1,18 @@
 package Validators;
+import Controllers.LoginController;
+import Tables.Dates;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
+import Controllers.AdminController;
 
 public class Loader
 {
-    static Stage pr=new Stage();
-    static Parent root;
+    public static Stage pr=new Stage();
+    public static Stage st=new Stage();
+    public static Parent root;
 
     public static class LoadLogin
     {
@@ -26,10 +30,31 @@ public class Loader
     {
         public LoadEmployee() throws IOException
         {
-            root = FXMLLoader.load(getClass().getResource("/fxml/Employee.fxml"));
-            pr.setTitle("Main window for employee");
-            pr.setScene(new Scene(root));
-            pr.show();
+            pr.close();
+
+            Loader.st.setOnCloseRequest(evt ->
+            {
+                evt.consume();
+                Dates d=new Dates();
+                Database.DB db=new Database.DB();
+                db.Create();
+                Show b=new Show();
+
+                db.session.beginTransaction();
+                d.setStartdate(LoginController.time);
+                try { d.setEnddate(b.Time()); } catch (IOException e) { e.printStackTrace(); }
+                d.setE_id(LoginController.id);
+                db.session.save(d);
+                db.session.getTransaction().commit();
+                db.session.close();
+                db.factory.close();
+                st.close();
+            });
+
+            root=FXMLLoader.load(getClass().getResource("/fxml/Employee.fxml"));
+            st.setTitle("Main window for employee");
+            st.setScene(new Scene(root));
+            st.show();
         }
     }
 
@@ -37,6 +62,14 @@ public class Loader
     {
         public LoadAdmin() throws IOException
         {
+            Loader.pr.setOnCloseRequest(evt ->
+            {
+                evt.consume();
+                AdminController.db.session.close();
+                AdminController.db.factory.close();
+                pr.close();
+            });
+
             root = FXMLLoader.load(getClass().getResource("/fxml/Admin.fxml"));
             pr.setTitle("Main window for admin");
             pr.setScene(new Scene(root));
@@ -51,6 +84,18 @@ public class Loader
             Stage cr=new Stage();
             Parent r = FXMLLoader.load(getClass().getResource("/fxml/Create.fxml"));
             cr.setTitle("Window for creating employee");
+            cr.setScene(new Scene(r));
+            cr.show();
+        }
+    }
+
+    public static class LoadHWID
+    {
+        public LoadHWID() throws IOException
+        {
+            Stage cr=new Stage();
+            Parent r=FXMLLoader.load(getClass().getResource("/fxml/Hardware.fxml"));
+            cr.setTitle("Window for Adding HWID");
             cr.setScene(new Scene(r));
             cr.show();
         }

@@ -2,8 +2,11 @@
   <dictionary name="MyPC">
     <words>
       <w>enddate</w>
+      <w>hwid</w>
+      <w>nist</w>
       <w>postgresql</w>
       <w>primstage</w>
+      <w>startdate</w>
       <w>tableview</w>
     </words>
   </dictionary>

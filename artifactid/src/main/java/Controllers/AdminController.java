@@ -1,15 +1,9 @@
 package Controllers;
 import Inqueries.AdminShow;
+import Tables.Dates;
 import Tables.Employee;
-import Tables.EndDate;
-import Tables.StartDate;
 import Validators.Database;
 import Validators.Validators;
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -17,106 +11,144 @@ import org.hibernate.query.Query;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Predicate;
 import Validators.Loader.LoadLogin;
 import Validators.Loader.LoadCreate;
+import Validators.Loader.LoadHWID;
+import Validators.Show;
 
 public class AdminController
 {
-    @FXML DatePicker date, date2;
-    @FXML Button button;
+    @FXML Button button, log, create, month, day, seven, hardware;
     @FXML TextField search;
-    @FXML TableView<AdminShow> tableview;
-    @FXML private TableColumn<AdminShow, String> first;
-    @FXML private TableColumn<AdminShow, String> middle;
-    @FXML private TableColumn<AdminShow, String> last;
-    @FXML private TableColumn<AdminShow, String> time;
+    @FXML DatePicker date, date2;
+    @FXML TableView<AdminShow>tableview;
+    @FXML private TableColumn<AdminShow, String>last;
+    @FXML private TableColumn<AdminShow, String>time;
+    @FXML private TableColumn<AdminShow, String>first;
+    @FXML private TableColumn<AdminShow, String>middle;
+    private static SimpleDateFormat f=new SimpleDateFormat("HH:mm:ss");
+    Calendar cal=Calendar.getInstance();
+    Calendar cal1=Calendar.getInstance();
+    public static Database.DB db=new Database.DB();
+    List<Dates>list;
+    List<Employee>l;
+    Date d1;
+    Show b=new Show();
 
-    private SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
+    @FXML public void initialize() throws ParseException
+    {
+        db.Create();
+        date.setValue(LocalDate.now());
+        date2.setValue(LocalDate.now());
+        first.setCellValueFactory(new PropertyValueFactory<>("first"));
+        middle.setCellValueFactory(new PropertyValueFactory<>("middle"));
+        last.setCellValueFactory(new PropertyValueFactory<>("last"));
+        time.setCellValueFactory(new PropertyValueFactory<>("time"));
+        action4();
+    }
 
     public void action() throws ParseException
     {
-        Validators.DV dv= new Validators.DV(date, date2);
+        Validators.DV dv=new Validators.DV(date, date2);
 
         if(!Validators.error)
         {
-            tableview.getItems().clear();
-            Database.DB db= new Database.DB();
-            List<Employee>l=db.session.createQuery("FROM Employee").list();
+            cal.setTime(java.sql.Date.valueOf(date2.getValue()));
+            cal.add(Calendar.HOUR_OF_DAY, 23);
+            cal.add(Calendar.MINUTE, 59);
+            cal.add(Calendar.SECOND, 59);
 
-            Query q = db.session.createQuery("FROM StartDate where date between :d and :d2");
+            Query q=db.session.createQuery("FROM Dates where startdate >= :d and enddate <= :d2");
             q.setParameter("d", java.sql.Date.valueOf(date.getValue()));
-            q.setParameter("d2", java.sql.Date.valueOf(date2.getValue()));
-            List<StartDate> l11 = q.list();
+            q.setParameter("d2", cal.getTime());
+            list=q.list();
 
-            Query q1 = db.session.createQuery("FROM EndDate where date between :d and :d2");
-            q1.setParameter("d", java.sql.Date.valueOf(date.getValue()));
-            q1.setParameter("d2", java.sql.Date.valueOf(date2.getValue()));
-            List<EndDate> l22 = q1.list();
-            ObservableList<AdminShow>d=FXCollections.observableArrayList();
-
-            first.setCellValueFactory(new PropertyValueFactory<>("first"));
-            middle.setCellValueFactory(new PropertyValueFactory<>("middle"));
-            last.setCellValueFactory(new PropertyValueFactory<>("last"));
-            time.setCellValueFactory(new PropertyValueFactory<>("time"));
-
-            for (Employee o:l)
-            {
-                AdminShow a=new AdminShow();
-                long td=0;
-
-                for(StartDate startDate:l11)
-                {
-                    for(EndDate endDate:l22)
-                    {
-                        if(startDate.getId()==endDate.getS_id()
-                        && startDate.getE_id()==(o.getId())
-                        && endDate.getE_id()==(o.getId()))
-                        {
-                            Date d1=f.parse(f.format(endDate.getDate().getTime()));
-                            Date d2=f.parse(f.format(startDate.getDate().getTime()));
-
-                            td+=d1.getTime()-d2.getTime();
-                            a.setTime(""+td/(60*60*1000)%24+":"+td/(60*1000)%60+":"+td/1000%60);
-                        }
-                    }
-                }
-
-                if(td!=0)
-                {
-                    a.setFirst(o.getFirst());
-                    a.setMiddle(o.getMiddle());
-                    a.setLast(o.getLast());
-                    d.add(a);
-                }
-            }
-
-            tableview.getItems().addAll(d);
-            button.disableProperty().bind(Bindings.isNotEmpty(search.textProperty()));
-
-            FilteredList<AdminShow>fd=new FilteredList<>(d, e -> true);
-            search.setOnKeyReleased(e -> { search.textProperty().addListener((observableValue, oldValue, newValue) ->
-            fd.setPredicate((Predicate<? super AdminShow>) as ->
-            {
-                if(newValue == null || newValue.isEmpty()) { return true; }
-                String lower = newValue.toLowerCase();
-                if(as.getFirst().toLowerCase().contains(lower)) { return true; }
-                else if(as.getMiddle().toLowerCase().contains(lower)) { return true; }
-                else return as.getLast().toLowerCase().contains(lower);
-            }));
-
-                SortedList<AdminShow>sd=new SortedList<>(fd);
-                sd.comparatorProperty().bind(tableview.comparatorProperty());
-                tableview.setItems(sd);
-            });
-
-            db.session.close();
-            db.factory.close();
+            b.Table(tableview, l, list, cal, d1, f, search);
+            b.Disable(button, log, create, month, day, seven, hardware, search);
         }
     }
 
-    public void action2() throws IOException { LoadLogin ll=new LoadLogin(); }
+    public void action2() throws IOException
+    {
+        LoadLogin ll=new LoadLogin();
+        db.session.close();
+        db.factory.close();
+    }
+
     public void action3() throws IOException { LoadCreate lc=new LoadCreate(); }
+
+    public void action4() throws ParseException
+    {
+        l=db.session.createQuery("FROM Employee").list();
+
+        cal.setTime(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        cal.add(Calendar.HOUR_OF_DAY, 23);
+        cal.add(Calendar.MINUTE, 59);
+        cal.add(Calendar.SECOND, 59);
+
+        date.setValue(LocalDate.now());
+        date2.setValue(LocalDate.now());
+
+        Query q=db.session.createQuery("FROM Dates where startdate >= :d and enddate <= :d2");
+        q.setParameter("d", Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        q.setParameter("d2", cal.getTime());
+        list=q.list();
+
+        b.Table(tableview, l, list, cal, d1, f, search);
+        b.Disable(button, log, create, month, day, seven, hardware, search);
+    }
+
+    public void action5() throws ParseException
+    {
+        l=db.session.createQuery("FROM Employee").list();
+
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal1=Calendar.getInstance();
+        cal1.add(Calendar.MONTH, 1);
+        cal1.set(Calendar.DATE, 1);
+        cal1.add(Calendar.DATE, -1);
+
+        date.setValue(LocalDateTime.ofInstant(cal.toInstant(), cal.getTimeZone().toZoneId()).toLocalDate());
+        date2.setValue(LocalDateTime.ofInstant(cal1.toInstant(), cal1.getTimeZone().toZoneId()).toLocalDate());
+
+        Query q=db.session.createQuery("FROM Dates where startdate >= :d and enddate <= :d2");
+        q.setParameter("d", cal.getTime());
+        q.setParameter("d2", cal1.getTime());
+        list=q.list();
+
+        b.Table(tableview, l, list, cal, d1, f, search);
+        b.Disable(button, log, create, month, day, seven, hardware, search);
+    }
+
+    public void action6() throws ParseException
+    {
+        l=db.session.createQuery("FROM Employee").list();
+
+        cal.setTime(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        cal.add(Calendar.HOUR_OF_DAY, 23);
+        cal.add(Calendar.MINUTE, 59);
+        cal.add(Calendar.SECOND, 59);
+
+        cal1.setTime(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        cal1.add(Calendar.DATE, -7);
+
+        date.setValue(LocalDateTime.ofInstant(cal1.toInstant(), cal1.getTimeZone().toZoneId()).toLocalDate());
+        date2.setValue(LocalDateTime.ofInstant(cal.toInstant(), cal.getTimeZone().toZoneId()).toLocalDate());
+
+        Query q=db.session.createQuery("FROM Dates where startdate >= :d and enddate <= :d2");
+        q.setParameter("d", cal1.getTime());
+        q.setParameter("d2", cal.getTime());
+        list=q.list();
+
+        b.Table(tableview, l, list, cal, d1, f, search);
+        b.Disable(button, log, create, month, day, seven, hardware, search);
+    }
+
+    public void action7() throws IOException { LoadHWID hw=new LoadHWID(); }
 }

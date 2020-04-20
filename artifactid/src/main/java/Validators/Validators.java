@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Validators
 {
-    private static Alert e = new Alert(Alert.AlertType.ERROR);
+    private static Alert e=new Alert(Alert.AlertType.ERROR);
     public static boolean error=false;
 
     public static class EV
@@ -29,7 +29,8 @@ public class Validators
             }
             else
             {
-                Database.DB db= new Database.DB();
+                Database.DB db=new Database.DB();
+                db.Create();
                 List emp = db.session.createQuery("from Employee").list();
 
                 for (Object o : emp)

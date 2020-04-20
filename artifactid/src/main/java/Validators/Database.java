@@ -10,7 +10,7 @@ public class Database
         public Session session;
         public SessionFactory factory;
 
-        public DB()
+        public void Create()
         {
             Configuration cfg = new Configuration();
             cfg.configure("hibernate.cfg.xml");

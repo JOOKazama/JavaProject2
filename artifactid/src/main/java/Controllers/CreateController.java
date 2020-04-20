@@ -19,8 +19,9 @@ public class CreateController
         if(!Validators.error)
         {
             Employee a=new Employee();
-            Database.DB db= new Database.DB();
-            Session session=(Session)db.session;
+            Database.DB db=new Database.DB();
+            db.Create();
+            Session session=db.session;
 
             session.beginTransaction();
             a.setFirst(first.getText());
