@@ -10,7 +10,7 @@ import org.hibernate.Session;
 public class CreateController
 {
     @FXML TextField first, middle, last, username, password;
-    private Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private Alert alert=new Alert(Alert.AlertType.INFORMATION);
 
     public void action()
     {

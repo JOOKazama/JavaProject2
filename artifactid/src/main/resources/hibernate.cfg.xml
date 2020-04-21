@@ -12,5 +12,6 @@
         <mapping class="Tables.Admin"/>
         <mapping class="Tables.Employee"/>
         <mapping class="Tables.Dates"/>
+        <mapping class="Tables.HWID"/>
     </session-factory>
 </hibernate-configuration>

@@ -100,4 +100,28 @@ public class Loader
             cr.show();
         }
     }
+
+    public static class LoadThisHWID
+    {
+        public LoadThisHWID() throws IOException
+        {
+            Stage cr=new Stage();
+            Parent r=FXMLLoader.load(getClass().getResource("/fxml/PCHWID.fxml"));
+            cr.setTitle("This PC's ID");
+            cr.setScene(new Scene(r));
+            cr.show();
+        }
+    }
+
+    public static class LoadListHWID
+    {
+        public LoadListHWID() throws IOException
+        {
+            Stage cr=new Stage();
+            Parent r=FXMLLoader.load(getClass().getResource("/fxml/ListHWID.fxml"));
+            cr.setTitle("List of HWID's");
+            cr.setScene(new Scene(r));
+            cr.show();
+        }
+    }
 }

@@ -12,7 +12,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import org.apache.commons.net.ntp.NTPUDPClient;
 import org.apache.commons.net.ntp.TimeInfo;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -103,5 +105,19 @@ public class Show
             long millis=System.currentTimeMillis();
 
             return new Timestamp(millis+offset);
+        }
+
+        public String ThisHWID() throws IOException
+        {
+            String id;
+            StringBuilder sb=new StringBuilder();
+            String str;
+
+            Process pr=Runtime.getRuntime().exec("wmic csproduct get UUID");
+            BufferedReader br=new BufferedReader(new InputStreamReader(pr.getInputStream()));
+
+            while ((str=br.readLine())!=null) { sb.append(str).append("\n"); }
+            id=sb.toString().substring(sb.indexOf("\n"), sb.length()).trim();
+            return id;
         }
 }

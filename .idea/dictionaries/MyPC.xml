@@ -1,13 +1,16 @@
 <component name="ProjectDictionaryState">
   <dictionary name="MyPC">
     <words>
+      <w>csproduct</w>
       <w>enddate</w>
       <w>hwid</w>
       <w>nist</w>
+      <w>pchwid</w>
       <w>postgresql</w>
       <w>primstage</w>
       <w>startdate</w>
       <w>tableview</w>
+      <w>wmic</w>
     </words>
   </dictionary>
 </component>
