@@ -11,7 +11,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.hibernate.query.Query;
-import java.text.ParseException;
 import java.util.List;
 import java.util.function.Predicate;
 

@@ -18,6 +18,7 @@ public class Loader
     {
         public LoadLogin() throws IOException
         {
+            st.close();
             root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
             pr.setResizable(false);
             pr.setTitle("Login");
