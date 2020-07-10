@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="53.0" prefWidth="401.0" xmlns="http://javafx.com/javafx/10.0.2-internal"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.PCHWIDController">
-   <TextField fx:id="tf" cache="true" layoutX="14.0" layoutY="14.0" prefHeight="23.0" prefWidth="371.0"
-              promptText="The HWID!">
-      <effect>
-         <DropShadow/>
-      </effect>
+<AnchorPane prefHeight="53.0" prefWidth="401.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.PCHWIDController">
+
+   <TextField fx:id="hwid" cache="true" layoutX="14.0" layoutY="14.0" prefHeight="23.0" prefWidth="371.0" promptText="The HWID!">
+      <effect> <DropShadow/> </effect>
    </TextField>
+
 </AnchorPane>

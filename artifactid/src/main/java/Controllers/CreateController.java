@@ -3,33 +3,44 @@ import Tables.Employee;
 import Validators.Validators;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import Validators.Database;
 import org.hibernate.Session;
 
 public class CreateController
 {
+    public Button button_create;
     @FXML TextField first, middle, last, username, password;
     private Alert alert=new Alert(Alert.AlertType.INFORMATION);
+    private Alert alert_error=new Alert(Alert.AlertType.ERROR);
+    Validators validator=new Validators();
 
-    public void action()
+    public void create()
     {
-        Validators.EV ev= new Validators.EV(first.getText(), middle.getText(), last.getText(), username.getText());
+        validator.ValidatorCreateController(first.getText(), middle.getText(), last.getText(), username.getText());
+        alert_error.setHeaderText("Error!");
 
-        if(!Validators.error)
+        if(!validator.getError().equals(""))
         {
-            Employee a=new Employee();
+            alert_error.setContentText(validator.getError());
+            alert_error.showAndWait();
+            validator.setError("");
+        }
+        else
+        {
+            Employee employee=new Employee();
             Database.DB db=new Database.DB();
             db.Create();
             Session session=db.session;
 
             session.beginTransaction();
-            a.setFirst(first.getText());
-            a.setMiddle(middle.getText());
-            a.setLast(last.getText());
-            a.setUsername(username.getText());
-            a.setPassword(password.getText());
-            session.save(a);
+            employee.setFirst(first.getText());
+            employee.setMiddle(middle.getText());
+            employee.setLast(last.getText());
+            employee.setUsername(username.getText());
+            employee.setPassword(password.getText());
+            session.save(employee);
             session.getTransaction().commit();
 
             db.session.close();

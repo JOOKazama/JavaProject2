@@ -27,57 +27,59 @@ import java.util.function.Predicate;
 public class Show
 {
         public void Table
-        (TableView<AdminShow> tableview, List<Employee> l, List<Dates> list, Calendar cal, Date d1, SimpleDateFormat f, TextField search) throws ParseException
+        (TableView<AdminShow>table_view_admin_show, List<Employee>list_employee, List<Dates>list_dates, Calendar calendar, TextField search) throws ParseException
         {
-            ObservableList<AdminShow>d=FXCollections.observableArrayList();
-            tableview.getItems().clear();
+            SimpleDateFormat simple_date_format=new SimpleDateFormat("HH:mm:ss");
+            ObservableList<AdminShow>observable_list_admin_show=FXCollections.observableArrayList();
+            Date date;
+            table_view_admin_show.getItems().clear();
 
-            for (Employee o:l)
+            for (Employee employee:list_employee)
             {
-                AdminShow a=new AdminShow();
-                long td=0;
+                AdminShow admin_show=new AdminShow();
+                long value=0;
 
-                for(Dates date:list)
+                for(Dates date1:list_dates)
                 {
-                    if(date.getE_id()==(o.getId()))
+                    if(date1.getE_id()==(employee.getId()))
                     {
-                        if(cal.getTime().before(f.parse(f.format(date.getEnddate().getTime()))))
-                        { d1=cal.getTime(); }
+                        if(calendar.getTime().before(simple_date_format.parse(simple_date_format.format(date1.getEnddate().getTime()))))
+                        { date=calendar.getTime(); }
                         else
-                        d1=f.parse(f.format(date.getEnddate().getTime()));
-                        Date d2=f.parse(f.format(date.getStartdate().getTime()));
-                        td+=d1.getTime()-d2.getTime();
-                        a.setTime(""+td/(60*60*1000)%24+":"+td/(60*1000)%60+":"+td/1000%60);
+                        date=simple_date_format.parse(simple_date_format.format(date1.getEnddate().getTime()));
+                        Date d2=simple_date_format.parse(simple_date_format.format(date1.getStartdate().getTime()));
+                        value+=date.getTime()-d2.getTime();
+                        admin_show.setTime(""+value/(60*60*1000)%24+":"+value/(60*1000)%60+":"+value/1000%60);
                     }
                 }
 
-                if(td!=0)
+                if(value!=0)
                 {
-                    a.setFirst(o.getFirst());
-                    a.setMiddle(o.getMiddle());
-                    a.setLast(o.getLast());
-                    d.add(a);
+                    admin_show.setFirst(employee.getFirst());
+                    admin_show.setMiddle(employee.getMiddle());
+                    admin_show.setLast(employee.getLast());
+                    observable_list_admin_show.add(admin_show);
                 }
             }
-            tableview.getItems().addAll(d);
+            table_view_admin_show.getItems().addAll(observable_list_admin_show);
 
-            FilteredList<AdminShow> fd=new FilteredList<>(d, e->true);
-            search.setOnKeyReleased(e ->
+            FilteredList<AdminShow>filtered_list_admin_show=new FilteredList<>(observable_list_admin_show, e->true);
+            search.setOnKeyReleased(e->
             {
                 search.textProperty().addListener((observableValue, oldValue, newValue) ->
-                fd.setPredicate((Predicate<? super AdminShow>) as ->
+                filtered_list_admin_show.setPredicate((Predicate<?super AdminShow>) admin_show ->
                 {
                     if(newValue==null || newValue.isEmpty()) { return true; }
-                    String lower=newValue.toLowerCase();
-                    if(as.getFirst().toLowerCase().contains(lower)) { return true; }
-                    else if(as.getMiddle().toLowerCase().contains(lower)) { return true; }
-                    else return as.getLast().toLowerCase().contains(lower);
+                    String lower_case=newValue.toLowerCase();
+                    if(admin_show.getFirst().toLowerCase().contains(lower_case)) { return true; }
+                    else if(admin_show.getMiddle().toLowerCase().contains(lower_case)) { return true; }
+                    else return admin_show.getLast().toLowerCase().contains(lower_case);
                 }));
 
-                SortedList<AdminShow>sd=new SortedList<>(fd);
-                sd.comparatorProperty().bind(tableview.comparatorProperty());
-                tableview.getItems().clear();
-                tableview.getItems().addAll(sd);
+                SortedList<AdminShow>sorted_list_admin_show=new SortedList<>(filtered_list_admin_show);
+                sorted_list_admin_show.comparatorProperty().bind(table_view_admin_show.comparatorProperty());
+                table_view_admin_show.getItems().clear();
+                table_view_admin_show.getItems().addAll(sorted_list_admin_show);
             });
         }
 
@@ -95,29 +97,29 @@ public class Show
 
         public Timestamp Time() throws IOException
         {
-            final String servername="pool.ntp.org";
+            final String server_name="pool.ntp.org";
             NTPUDPClient client=new NTPUDPClient();
             client.setDefaultTimeout(10_000);
 
-            TimeInfo info=client.getTime(InetAddress.getByName(servername));
-            info.computeDetails();
-            Long offset=info.getOffset();
-            long millis=System.currentTimeMillis();
+            TimeInfo time_info=client.getTime(InetAddress.getByName(server_name));
+            time_info.computeDetails();
+            Long off_set=time_info.getOffset();
+            long milliseconds=System.currentTimeMillis();
 
-            return new Timestamp(millis+offset);
+            return new Timestamp(milliseconds+off_set);
         }
 
         public String ThisHWID() throws IOException
         {
             String id;
-            StringBuilder sb=new StringBuilder();
-            String str;
+            StringBuilder string_builder=new StringBuilder();
+            String string_id;
 
-            Process pr=Runtime.getRuntime().exec("wmic csproduct get UUID");
-            BufferedReader br=new BufferedReader(new InputStreamReader(pr.getInputStream()));
+            Process process=Runtime.getRuntime().exec("wmic csproduct get UUID");
+            BufferedReader buffered_reader=new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-            while ((str=br.readLine())!=null) { sb.append(str).append("\n"); }
-            id=sb.toString().substring(sb.indexOf("\n"), sb.length()).trim();
+            while((string_id=buffered_reader.readLine())!=null) { string_builder.append(string_id).append("\n"); }
+            id=string_builder.toString().substring(string_builder.indexOf("\n"), string_builder.length()).trim();
             return id;
         }
 }

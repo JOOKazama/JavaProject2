@@ -4,7 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity @Table(name="hwid")
+@Entity
+@Table(name="hwid")
 public class HWID
 {
     @Column(name="id", unique=true) @Id private String id;

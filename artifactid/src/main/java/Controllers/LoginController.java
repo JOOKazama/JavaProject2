@@ -6,56 +6,63 @@ import Validators.Database;
 import Validators.Show;
 import javafx.application.Application;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
-import Validators.Loader.LoadLogin;
-import Validators.Loader.LoadAdmin;
-import Validators.Loader.LoadEmployee;
+import Validators.Loader;
 
+@SuppressWarnings("unchecked")
 public class LoginController extends Application
 {
-    public static Timestamp time;
+    public static Timestamp timestamp;
     public static int id;
+    public Button button_login;
     @FXML private TextField username, password;
     @FXML private Label label;
-    Show b=new Show();
-    Boolean yes=false;
+    Show show=new Show();
+    Boolean if_hwid_exists=false;
+    Loader loader=new Loader();
 
-    @Override public void start(Stage p) throws Exception { LoadLogin ll=new LoadLogin(); }
+    @Override public void start(Stage stage) throws Exception { loader.LoadLogin(); }
 
-    public void action() throws IOException
+    public void login() throws Exception
     {
         Database.DB db=new Database.DB();
         db.Create();
-        List l=db.session.createQuery("from Employee").list();
-        List l1=db.session.createQuery("from HWID").list();
-        Admin a=db.session.get(Admin.class, 1);
-        String hwid=b.ThisHWID();
+        List<Employee>list_employee=db.session.createQuery("from Employee").list();
+        List<HWID>list_hwid=db.session.createQuery("from HWID").list();
+        Admin admin=db.session.get(Admin.class, 1);
+        String hwid=show.ThisHWID();
 
-        for (Object o:l1)
+        for(Object object:list_hwid)
         {
-            if ((((HWID)o).getId()).equals(hwid))
+            if((((HWID)object).getId()).equals(hwid))
             {
-                yes=true;
+                if_hwid_exists=true;
                 break;
             }
         }
 
-        for (Object o:l)
+        for(Object object:list_employee)
         {
-            if ((((Employee)o).getUsername()).equals(username.getText())
-            && (((Employee)o).getPassword()).equals(password.getText()) && yes)
+            if((((Employee)object).getUsername()).equals(username.getText())
+            && (((Employee)object).getPassword()).equals(password.getText()) && if_hwid_exists)
             {
-                time=b.Time();
-                id=((Employee)o).getId();
-                LoadEmployee le=new LoadEmployee();
+                Stage stage=(Stage)button_login.getScene().getWindow();
+                stage.close();
+                timestamp=show.Time();
+                id=((Employee)object).getId();
+                loader.LoadEmployee();
             }
-            else if (a.getUsername().equals(username.getText()) && a.getPassword().equals(password.getText()))
-            { LoadAdmin ll=new LoadAdmin(); }
+            else if(admin.getUsername().equals(username.getText()) && admin.getPassword().equals(password.getText()))
+            {
+                Stage stage=(Stage)button_login.getScene().getWindow();
+                stage.close();
+                loader.LoadAdmin();
+            }
             else { label.setText("Invalid input or HWID!"); }
         }
 

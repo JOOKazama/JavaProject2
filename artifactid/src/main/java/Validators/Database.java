@@ -12,10 +12,10 @@ public class Database
 
         public void Create()
         {
-            Configuration cfg = new Configuration();
-            cfg.configure("hibernate.cfg.xml");
-            factory = cfg.buildSessionFactory();
-            session = factory.openSession();
+            Configuration configuration=new Configuration();
+            configuration.configure("hibernate.cfg.xml");
+            factory=configuration.buildSessionFactory();
+            session=factory.openSession();
         }
     }
 }

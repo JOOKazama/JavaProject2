@@ -6,14 +6,14 @@ import java.io.IOException;
 
 public class PCHWIDController
 {
-    @FXML TextField tf;
-    Show b=new Show();
+    @FXML TextField hwid;
+    Show show=new Show();
 
     @FXML public void initialize() throws IOException
     {
-        tf.setEditable(false);
-        tf.setMouseTransparent(true);
-        tf.setFocusTraversable(true);
-        tf.setText(b.ThisHWID());
+        hwid.setEditable(false);
+        hwid.setMouseTransparent(true);
+        hwid.setFocusTraversable(true);
+        hwid.setText(show.ThisHWID());
     }
 }

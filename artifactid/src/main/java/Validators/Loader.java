@@ -10,119 +10,102 @@ import Controllers.AdminController;
 
 public class Loader
 {
-    public static Stage pr=new Stage();
-    public static Stage st=new Stage();
-    public static Parent root;
+    private Stage primary_stage=new Stage();
+    private Stage stage=new Stage();
+    private Parent root, parent;
 
-    public static class LoadLogin
+    public void LoadLogin() throws IOException
     {
-        public LoadLogin() throws IOException
-        {
-            st.close();
-            root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
-            pr.setResizable(false);
-            pr.setTitle("Login");
-            pr.setScene(new Scene(root));
-            pr.show();
-        }
+        root=FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
+        primary_stage.setResizable(false);
+        primary_stage.setTitle("Login");
+        primary_stage.setScene(new Scene(root));
+        primary_stage.show();
     }
 
-    public static class LoadEmployee
+    public void LoadEmployee() throws IOException
     {
-        public LoadEmployee() throws IOException
+        root=FXMLLoader.load(getClass().getResource("/fxml/Employee.fxml"));
+        primary_stage.setTitle("Main window for employee");
+        primary_stage.setScene(new Scene(root));
+        primary_stage.show();
+
+        primary_stage.setOnCloseRequest(evt->
         {
-            pr.close();
+            evt.consume();
+            Dates dates=new Dates();
+            Database.DB db=new Database.DB();
+            db.Create();
+            Show show=new Show();
 
-            Loader.st.setOnCloseRequest(evt ->
-            {
-                evt.consume();
-                Dates d=new Dates();
-                Database.DB db=new Database.DB();
-                db.Create();
-                Show b=new Show();
-
-                db.session.beginTransaction();
-                d.setStartdate(LoginController.time);
-                try { d.setEnddate(b.Time()); } catch (IOException e) { e.printStackTrace(); }
-                d.setE_id(LoginController.id);
-                db.session.save(d);
-                db.session.getTransaction().commit();
-                db.session.close();
-                db.factory.close();
-                st.close();
-            });
-
-            root=FXMLLoader.load(getClass().getResource("/fxml/Employee.fxml"));
-            st.setTitle("Main window for employee");
-            st.setScene(new Scene(root));
-            st.show();
-        }
+            db.session.beginTransaction();
+            dates.setStartdate(LoginController.timestamp);
+            try { dates.setEnddate(show.Time()); }
+            catch(IOException e) { e.printStackTrace(); }
+            dates.setE_id(LoginController.id);
+            db.session.save(dates);
+            db.session.getTransaction().commit();
+            db.session.close();
+            db.factory.close();
+            primary_stage.close();
+        });
     }
 
-    public static class LoadAdmin
+    public void LoadAdmin() throws IOException
     {
-        public LoadAdmin() throws IOException
-        {
-            Loader.pr.setOnCloseRequest(evt ->
-            {
-                evt.consume();
-                AdminController.db.session.close();
-                AdminController.db.factory.close();
-                pr.close();
-            });
+        root=FXMLLoader.load(getClass().getResource("/fxml/Admin.fxml"));
+        primary_stage.setTitle("Main window for admin");
+        primary_stage.setScene(new Scene(root));
+        primary_stage.show();
 
-            root = FXMLLoader.load(getClass().getResource("/fxml/Admin.fxml"));
-            pr.setTitle("Main window for admin");
-            pr.setScene(new Scene(root));
-            pr.show();
-        }
+        primary_stage.setOnCloseRequest(evt->
+        {
+            evt.consume();
+            AdminController.db.session.close();
+            AdminController.db.factory.close();
+            primary_stage.close();
+        });
     }
 
-    public static class LoadCreate
+    public void LoadCreate() throws IOException
     {
-        public LoadCreate() throws IOException
-        {
-            Stage cr=new Stage();
-            Parent r = FXMLLoader.load(getClass().getResource("/fxml/Create.fxml"));
-            cr.setTitle("Window for creating employee");
-            cr.setScene(new Scene(r));
-            cr.show();
-        }
+        parent=FXMLLoader.load(getClass().getResource("/fxml/Create.fxml"));
+        stage.setTitle("Window for creating employee");
+        stage.setScene(new Scene(parent));
+        stage.show();
     }
 
-    public static class LoadHWID
+    public void LoadHWID() throws IOException
     {
-        public LoadHWID() throws IOException
-        {
-            Stage cr=new Stage();
-            Parent r=FXMLLoader.load(getClass().getResource("/fxml/Hardware.fxml"));
-            cr.setTitle("Window for Adding HWID");
-            cr.setScene(new Scene(r));
-            cr.show();
-        }
+        parent=FXMLLoader.load(getClass().getResource("/fxml/Hardware.fxml"));
+        stage.setTitle("Window for Adding HWID");
+        stage.setScene(new Scene(parent));
+        stage.show();
     }
 
-    public static class LoadThisHWID
+    public void LoadThisHWID() throws IOException
     {
-        public LoadThisHWID() throws IOException
-        {
-            Stage cr=new Stage();
-            Parent r=FXMLLoader.load(getClass().getResource("/fxml/PCHWID.fxml"));
-            cr.setTitle("This PC's ID");
-            cr.setScene(new Scene(r));
-            cr.show();
-        }
+        parent=FXMLLoader.load(getClass().getResource("/fxml/PCHWID.fxml"));
+        stage.setTitle("This PC's ID");
+        stage.setScene(new Scene(parent));
+        stage.show();
     }
 
-    public static class LoadListHWID
+    public void LoadListHWID() throws IOException
     {
-        public LoadListHWID() throws IOException
-        {
-            Stage cr=new Stage();
-            Parent r=FXMLLoader.load(getClass().getResource("/fxml/ListHWID.fxml"));
-            cr.setTitle("List of HWID's");
-            cr.setScene(new Scene(r));
-            cr.show();
-        }
+        parent=FXMLLoader.load(getClass().getResource("/fxml/ListHWID.fxml"));
+        stage.setTitle("List of HWID's");
+        stage.setScene(new Scene(parent));
+        stage.show();
     }
+
+    public Stage getPrimary_stage() { return primary_stage; }
+    public void setPrimary_stage(Stage primary_stage) { this.primary_stage=primary_stage; }
+    public Stage getStage() { return stage; }
+    public void setStage(Stage stage) { this.stage=stage; }
+    public Parent getRoot() { return root; }
+    public void setRoot(Parent root) { this.root=root; }
+    public Parent getParent() { return parent; }
+    public void setParent(Parent parent) { this.parent=parent; }
+    public void closeStage() { primary_stage.close(); }
 }

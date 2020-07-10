@@ -2,7 +2,8 @@ package Tables;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Entity @Table(name="dates")
+@Entity
+@Table(name="dates")
 public class Dates
 {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -12,11 +13,11 @@ public class Dates
     @Column(name="e_id") private int e_id;
 
     public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public void setId(int id) { this.id=id; }
     public Timestamp getStartdate() { return startdate; }
-    public void setStartdate(Timestamp startdate) { this.startdate = startdate; }
+    public void setStartdate(Timestamp startdate) { this.startdate=startdate; }
     public Timestamp getEnddate() { return enddate; }
-    public void setEnddate(Timestamp enddate) { this.enddate = enddate; }
+    public void setEnddate(Timestamp enddate) { this.enddate=enddate; }
     public int getE_id() { return e_id; }
-    public void setE_id(int e_id) { this.e_id = e_id; }
+    public void setE_id(int e_id) { this.e_id=e_id; }
 }

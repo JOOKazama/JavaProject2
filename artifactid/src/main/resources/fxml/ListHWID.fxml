@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane prefHeight="351.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ListHWIDController">
 
-    <TableView fx:id="tableview" layoutX="14.0" layoutY="14.0" prefHeight="287.0" prefWidth="521.0">
+    <TableView fx:id="table_view_list_hwid" layoutX="14.0" layoutY="14.0" prefHeight="287.0" prefWidth="521.0">
         <columns>
             <TableColumn fx:id="id" prefWidth="520.0" text="HWID:" />
         </columns>
-        <effect>
-            <DropShadow />
-        </effect>
+        <effect> <DropShadow/> </effect>
     </TableView>
+
     <TextField fx:id="search" layoutX="14.0" layoutY="313.0" prefHeight="25.0" prefWidth="521.0" promptText="Search...">
-        <effect>
-            <DropShadow />
-        </effect>
+        <effect> <DropShadow/> </effect>
     </TextField>
 
 </AnchorPane>

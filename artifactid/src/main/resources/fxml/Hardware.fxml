@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
@@ -7,34 +6,23 @@
 
 <AnchorPane prefHeight="92.0" prefWidth="505.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.HWIDController">
 
-    <TextField fx:id="text" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="476.0" promptText="Type the HWID you want to approve...">
-        <effect>
-            <DropShadow />
-        </effect>
+    <TextField fx:id="approve_hwid" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="476.0" promptText="Type the HWID you want to approve...">
+        <effect> <DropShadow/> </effect>
     </TextField>
-    <Button fx:id="approve" layoutX="14.0" layoutY="55.0" mnemonicParsing="false" onAction="#action" prefHeight="25.0" prefWidth="153.0" text="Approve">
-        <font>
-            <Font name="System Bold Italic" size="12.0" />
-        </font>
-        <effect>
-            <DropShadow />
-        </effect>
+
+    <Button fx:id="button_approve" layoutX="14.0" layoutY="55.0" mnemonicParsing="false" onAction="#approve" prefHeight="25.0" prefWidth="153.0" text="Approve">
+        <font> <Font name="System Bold Italic" size="12.0" /> </font>
+        <effect> <DropShadow/> </effect>
     </Button>
-    <Button fx:id="see" layoutX="175.0" layoutY="55.0" mnemonicParsing="false" onAction="#action2" prefHeight="25.0" prefWidth="153.0" text="See this PC's HWID">
-        <font>
-            <Font name="System Bold Italic" size="12.0" />
-        </font>
-        <effect>
-            <DropShadow />
-        </effect>
+
+    <Button fx:id="this_pc_hwid" layoutX="175.0" layoutY="55.0" mnemonicParsing="false" onAction="#action_this_pc_hwid" prefHeight="25.0" prefWidth="153.0" text="See this PC's HWID">
+        <font> <Font name="System Bold Italic" size="12.0" /> </font>
+        <effect> <DropShadow/> </effect>
     </Button>
-    <Button fx:id="list" layoutX="336.0" layoutY="55.0" mnemonicParsing="false" onAction="#action3" prefHeight="25.0" prefWidth="153.0" text="List of HWID's">
-        <font>
-            <Font name="System Bold Italic" size="12.0" />
-        </font>
-        <effect>
-            <DropShadow />
-        </effect>
+
+    <Button fx:id="list_of_hwid" layoutX="336.0" layoutY="55.0" mnemonicParsing="false" onAction="#action_list_of_hwid" prefHeight="25.0" prefWidth="153.0" text="List of HWID's">
+        <font> <Font name="System Bold Italic" size="12.0" /> </font>
+        <effect> <DropShadow/> </effect>
     </Button>
 
 </AnchorPane>

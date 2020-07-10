@@ -1,108 +1,70 @@
 package Validators;
 import Tables.Employee;
 import Tables.HWID;
-import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class Validators
 {
-    private static Alert e=new Alert(Alert.AlertType.ERROR);
-    public static boolean error=false;
+    private String error="";
 
-    public static class EV
+    public void ValidatorCreateController(String first, String middle, String last, String username)
     {
-        public EV(String f, String m, String l, String u)
+        if(first.equals("") || middle.equals("") || last.equals("") || username.equals(""))
+        { error="The field(s) must not be empty!"; }
+        else if(first.length()>30 || middle.length()>30 || last.length()>30 || username.length()>30)
+        { error="The field(s) must not contain more that 30 characters!"; }
+        else
         {
-            if (f.equals("") || m.equals("") || l.equals("") || u.equals(""))
-            {
-                e.setHeaderText("Error!");
-                e.setContentText("The field(s) must not be empty!");
-                e.showAndWait();
-                error=true;
-            }
-            else if (f.length()>30 || m.length()>30 || l.length()>30 || u.length()>30)
-            {
-                e.setHeaderText("Error!");
-                e.setContentText("The field(s) must not contain more that 30 characters!");
-                e.showAndWait();
-                error=true;
-            }
-            else
-            {
-                Database.DB db=new Database.DB();
-                db.Create();
-                List emp=db.session.createQuery("from Employee").list();
+            Database.DB db=new Database.DB();
+            db.Create();
+            List<Employee>list_employee=db.session.createQuery("from Employee").list();
 
-                for (Object o:emp)
+            for(Object object:list_employee)
+            {
+                if((((Employee)object).getUsername()).equals(username))
                 {
-                    if ((((Employee)o).getUsername()).equals(u))
-                    {
-                        e.setHeaderText("Error!");
-                        e.setContentText("There is already an employee with that username!");
-                        e.showAndWait();
-                        error=true;
-                        break;
-                    }
+                    error="There is already an employee with that username!";
+                    break;
                 }
-                db.session.close();
-                db.factory.close();
             }
+            db.session.close();
+            db.factory.close();
         }
     }
 
-    public static class DV
+    public void ValidatorAdminLogin(DatePicker date_picker, DatePicker date_picker1)
     {
-        public DV(DatePicker d, DatePicker d2)
-        {
-            if(d.getValue()==null || d2.getValue()==null || d2.getValue().isBefore(d.getValue()))
-            {
-                e.setHeaderText("Error!");
-                e.setContentText("The field must not be empty or have a invalid value!");
-                e.showAndWait();
-                error=true;
-            }
-        }
+        if(date_picker.getValue()==null || date_picker1.getValue()==null || date_picker1.getValue().isBefore(date_picker.getValue()))
+        { error="The field must not be empty or have a invalid value!"; }
     }
 
-    public static class HW
+    public void ValidatorHWIDController(String approve_hwid)
     {
-        public HW(String str)
+        if(approve_hwid.equals(""))
+        { error="The field must not be empty!"; }
+        else if(approve_hwid.length()>50)
+        { error="The field must not contain more that 50 characters!"; }
+        else
         {
-            if (str.equals(""))
-            {
-                e.setHeaderText("Error!");
-                e.setContentText("The field must not be empty!");
-                e.showAndWait();
-                error=true;
-            }
-            else if (str.length()>50)
-            {
-                e.setHeaderText("Error!");
-                e.setContentText("The field must not contain more that 50 characters!");
-                e.showAndWait();
-                error=true;
-            }
-            else
-            {
-                Database.DB db=new Database.DB();
-                db.Create();
-                List hw=db.session.createQuery("from HWID").list();
+            Database.DB db=new Database.DB();
+            db.Create();
+            List<HWID>list_hwid=db.session.createQuery("from HWID").list();
 
-                for (Object o:hw)
+            for(Object object:list_hwid)
+            {
+                if((((HWID)object).getId()).equals(approve_hwid))
                 {
-                    if ((((HWID)o).getId()).equals(str))
-                    {
-                        e.setHeaderText("Error!");
-                        e.setContentText("That HWID is added already!");
-                        e.showAndWait();
-                        error=true;
-                        break;
-                    }
+                    error="That HWID is added already!";
+                    break;
                 }
-                db.session.close();
-                db.factory.close();
             }
+            db.session.close();
+            db.factory.close();
         }
     }
+
+    public String getError() { return error; }
+    public void setError(String error) { this.error=error; }
 }
